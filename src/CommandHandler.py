@@ -20,14 +20,18 @@ def CommandHandler(logFileParser: LogFileParser, tts: TTS, queue: Queue) -> None
             
         line = logFileParser.readLastLine()
         if line is None:
-            time.sleep(0.4)
+            time.sleep(0.3)
             continue
-    
-        speakText(tts, line)
+        
+        queue.put(line)
 
 
 def speakText(tts: TTS, text: str) -> None:
     keyboard.press(Config.VOICE_KEY)
+    
+    print(f"[ Playing: '{text}' ]")
+    
     tts.speak(text)
     tts.removeAudioFile()
+    
     keyboard.release(Config.VOICE_KEY)

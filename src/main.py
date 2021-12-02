@@ -9,7 +9,7 @@ import Config
 
 logFileParser = LogFileParser()
 tts = TTS()
-queue = Queue(maxsize=0)
+queue = Queue(maxsize=5)
 
 
 # def getVirtualDevice() -> str:
@@ -24,19 +24,20 @@ queue = Queue(maxsize=0)
 def pause(commandHandlerThread: Thread) -> None:
     if commandHandlerThread.paused:
         commandHandlerThread.paused = False
-        print("CommandHandler has been unpaused")
+        print("[ CommandHandler has been unpaused ]")
     else:
         commandHandlerThread.paused = True
-        print("CommandHandler has been paused")
+        print("[ CommandHandler has been paused ]")
 
 
-def addCustomToQueue(text: str) -> None:
-    print(f"Playing custom: '{text}'")
-    queue.put(text)
+def addCustomToQueue(commandHandlerThread: Thread, text: str) -> None:
+    if not commandHandlerThread.paused: queue.put(text)
 
 
 def main() -> None:
-
+    #   Emptying logfile at program start
+    logFileParser.emptyLogFile()
+    
     commandHandlerThread = Thread(target=CommandHandler, args=(logFileParser, tts, queue))
     commandHandlerThread.start()
     commandHandlerThread.paused = False
@@ -48,13 +49,13 @@ def main() -> None:
 
     # loading custom binds
     for key in Config.CUSTOM_BINDS:
-        keyboard.add_hotkey(key[0], addCustomToQueue, args=(key[1],))
+        keyboard.add_hotkey(key[0], addCustomToQueue, args=(commandHandlerThread, key[1]))
 
     keyboard.wait(Config.STOP_KEY)
     commandHandlerThread.paused = False
     commandHandlerThread.running = False
 
-    print("Done!")
+    print("Finished!")
 
 
 if __name__ == "__main__":

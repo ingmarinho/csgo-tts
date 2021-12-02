@@ -10,7 +10,6 @@ class ChatPrefix(Enum):
     
     def prefixValue(self) -> tuple:
         return self.value
-        
 
 class LogFileParser:
     def __init__(self) -> None:
@@ -31,6 +30,7 @@ class LogFileParser:
         self.selectedPrefixes = sum(tuple([prefix.prefixValue() for prefix in prefixes]), ())
     
     def cleanLogFile(self) -> None:
+        print("[ Cleaning logfile ]")
         with open(self.logFileDir, "r+", encoding="utf-8") as logFile:
             lines: list = logFile.readlines()
 
@@ -42,4 +42,5 @@ class LogFileParser:
                     logFile.write(line)
     
     def emptyLogFile(self) -> None:
+        print("[ Emptying logfile ]")
         with open(self.logFileDir, 'w'): pass
