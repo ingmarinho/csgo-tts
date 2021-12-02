@@ -1,4 +1,4 @@
-# from queue import Queue
+from queue import Queue
 from threading import Thread
 import keyboard
 
@@ -9,7 +9,7 @@ import Config
 
 logFileParser = LogFileParser()
 tts = TTS()
-# queue = Queue(maxsize = 0)
+queue = Queue(maxsize=0)
 
 
 # def getVirtualDevice() -> str:
@@ -28,67 +28,33 @@ def pause(commandHandlerThread: Thread) -> None:
     else:
         commandHandlerThread.paused = True
         print("CommandHandler has been paused")
-        
-    # commandHandlerThread.paused = False if commandHandlerThread.paused else True
-    # print("CommandHandler has been paused")
 
-# def stop(commandHandlerThread: Thread) -> None:
-#     commandHandlerThread.running = False
-#     print("CommandHandler has been stopped!")
-    
+
+def addCustomToQueue(text: str) -> None:
+    print(f"Playing custom: '{text}'")
+    queue.put(text)
+
+
 def main() -> None:
-    
-    commandHandlerThread = Thread(target=CommandHandler, args=(logFileParser, tts))
+
+    commandHandlerThread = Thread(target=CommandHandler, args=(logFileParser, tts, queue))
     commandHandlerThread.start()
     commandHandlerThread.paused = False
-    
+
+    # loading default binds
     keyboard.add_hotkey(Config.PAUSE_KEY, pause, args=(commandHandlerThread,))
-    # keyboard.add_hotkey(Config.STOP_KEY, stop, args=(commandHandlerThread,))
     keyboard.add_hotkey(Config.CLEAN_LOGFILE_KEY, logFileParser.cleanLogFile)
     keyboard.add_hotkey(Config.EMPTY_LOGFILE_KEY, logFileParser.emptyLogFile)
-    
+
+    # loading custom binds
+    for key in Config.CUSTOM_BINDS:
+        keyboard.add_hotkey(key[0], addCustomToQueue, args=(key[1],))
+
     keyboard.wait(Config.STOP_KEY)
     commandHandlerThread.paused = False
     commandHandlerThread.running = False
-    
+
     print("Done!")
-    # time.sleep(5)
-    # t.running = False
-    # while True:
-    #     x = logFileParser.readLastLine()
-    #     print(x)
-    #     time.sleep(0.5)
-    
-    
-    # mixer.init()
-    # virtualInputDevice: str = getVirtualDevice()
-    # mixer.quit()
-    # mixer.init(devicename=virtualInputDevice)
-
-    # while True:
-        
-        
-        # time.sleep(0.5)
-
-        # cleanLogFile()
-
-        # if textQueue == []:
-        #     addTextToQueue()
-        # else:
-        #     removeTextFromFile(textQueue)
-        #     validText: str = textQueue[0][textQueue[0].find(':') + 1:].strip()
-        #     gTTS(text=validText, lang='en-uk').save("text.mp3")
-        #     mixer.music.load("text.mp3")
-        #     keyboard.press(VOICE_KEY)
-        #     mixer.music.play()
-        #     textQueue.pop(0)
-        #     while mixer.music.get_busy():
-        #         time.sleep(1)
-        #     mixer.music.unload()
-        #     keyboard.release(VOICE_KEY)
-
-        #     if os.path.exists("text.mp3"):
-        #         os.remove("text.mp3")
 
 
 if __name__ == "__main__":

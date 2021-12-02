@@ -1,41 +1,33 @@
 import keyboard
 import threading
 import time
+from queue import Queue
 
 from LogFileParser import LogFileParser
 from TTS import TTS
 import Config
 
 
-def CommandHandler(logFileParser: LogFileParser, tts: TTS) -> None:
+def CommandHandler(logFileParser: LogFileParser, tts: TTS, queue: Queue) -> None:
     thread = threading.current_thread()
     
     while getattr(thread, "running", True):
         while getattr(thread, "paused", True):
             time.sleep(1)
             
+        if not queue.empty():
+            speakText(tts, queue.get())
+            
         line = logFileParser.readLastLine()
         if line is None:
             time.sleep(0.4)
             continue
     
-        tts.speak(line)
-        keyboard.release(Config["CSGO"]["voiceKey"])
-        
-        tts.removeAudioFile()
+        speakText(tts, line)
 
 
-# def main():
-#     commandHandler = threading.Thread(target=CommandHandler)
-#     commandHandler.start()
-#     # time.sleep(5)
-#     # t.running = False
-    
-
-# if __name__ == "__main__":
-#     main()
-    
-    
-# class CommandHandler:
-#     def __init__(self) -> None:
-#         pass
+def speakText(tts: TTS, text: str) -> None:
+    keyboard.press(Config.VOICE_KEY)
+    tts.speak(text)
+    tts.removeAudioFile()
+    keyboard.release(Config.VOICE_KEY)

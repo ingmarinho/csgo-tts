@@ -12,3 +12,8 @@ PAUSE_KEY = configParser["BINDS"]["pauseToggle"]
 STOP_KEY = configParser["BINDS"]["stopRunning"]
 CLEAN_LOGFILE_KEY = configParser["BINDS"]["cleanLogFile"]
 EMPTY_LOGFILE_KEY = configParser["BINDS"]["emptyLogFile"]
+
+# loading custom binds
+configParser.read("./custom.ini")
+
+CUSTOM_BINDS = [(key, configParser["CUSTOM"][key]) for key in configParser["CUSTOM"]]
