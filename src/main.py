@@ -35,7 +35,7 @@ def addCustomToQueue(commandHandlerThread: Thread, text: str) -> None:
 
 
 def main() -> None:
-    #   Emptying logfile at program start
+    # Emptying logfile at program start
     logFileParser.emptyLogFile()
     
     commandHandlerThread = Thread(target=CommandHandler, args=(logFileParser, tts, queue))
