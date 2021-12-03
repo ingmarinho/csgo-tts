@@ -24,7 +24,7 @@ Please check and fill in the .ini files first!
 
 ## License
 
-Copyright © Ingmar Fontijne [ingmar.fontijne@student.hu.nl], 2021.
+Copyright © Ingmar Fontijne, 2021.
 
 Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt).
 
