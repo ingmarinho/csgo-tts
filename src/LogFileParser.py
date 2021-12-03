@@ -17,7 +17,7 @@ class ChatPrefix(Enum):
 class LogFileParser:
     def __init__(self) -> None:
         self.logFileDir = Config.LOGFILE_DIR
-        self.selectedPrefixes = ChatPrefix.ALL.prefixValue()
+        self.selectedPrefixes = (ChatPrefix.TEAM.prefixValue(), ChatPrefix.TEAM_DEAD.prefixValue())
         self.previousLine = str()
     
     def readLastLine(self) -> str | None:

@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+from os.path import exists
 
 configParser = ConfigParser()
 configParser.read("./config.ini")
@@ -7,6 +8,7 @@ assert configParser["STEAM"]["username"] != "", "Please fill in your Steam usern
 USERNAME = configParser["STEAM"]["username"]
 
 assert configParser["STEAM"]["csgoPath"] != "", "Please fill in your CSGO path in the config.ini file"
+assert exists(configParser["STEAM"]["csgoPath"] + "\console.log"), "Please make sure -condebug has been added to your CSGO launch options, if this is the case make sure CSGO is running before starting this program"
 LOGFILE_DIR = configParser["STEAM"]["csgoPath"] + "\console.log"
 
 
