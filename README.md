@@ -23,4 +23,9 @@ Please check and fill in the .ini files first!
 (From my experience you need to mess around a little bit with these settings for it to work)  
 
 ## License
-[BOOST](https://choosealicense.com/licenses/boost/)
+
+Copyright © Ingmar Fontijne [ingmar.fontijne@student.hu.nl], 2021.
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt).
+
+Note: See license file for a detailed description.
