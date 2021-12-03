@@ -38,6 +38,8 @@ def main() -> None:
     # Emptying logfile at program start
     logFileParser.emptyLogFile()
     
+    logFileParser.setPrefix(ChatPrefix.TEAM, ChatPrefix.TEAM_DEAD)
+    
     commandHandlerThread = Thread(target=CommandHandler, args=(logFileParser, tts, queue))
     commandHandlerThread.start()
     commandHandlerThread.paused = False
