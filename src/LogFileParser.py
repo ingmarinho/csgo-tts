@@ -6,7 +6,10 @@ class ChatPrefix(Enum):
     TEAM = (f"(Counter-Terrorist) {Config.USERNAME}", f"(Terrorist) {Config.USERNAME}")
     TEAM_DEAD = (f"*DEAD*(Counter-Terrorist) {Config.USERNAME}", f"*DEAD*(Terrorist) {Config.USERNAME}")
     ALL = (Config.USERNAME,)
-    ALL_DEAD = (f"*DEAD* {Config.USERNAME}")
+    ALL_DEAD = (f"*DEAD* {Config.USERNAME}",)
+    
+    def prefixName(self) -> str:
+        return self.name
     
     def prefixValue(self) -> tuple:
         return self.value
@@ -26,11 +29,10 @@ class LogFileParser:
             
             return line[line.find(':') + 1:].strip() if line.startswith(self.selectedPrefixes) else None
     
-    def setPrefix(self, *prefixes: ChatPrefix) -> None:  
+    def setPrefix(self, prefixes: list) -> None:  
         self.selectedPrefixes = sum(tuple([prefix.prefixValue() for prefix in prefixes]), ())
     
     def cleanLogFile(self) -> None:
-        print("[ Cleaning logfile ]")
         with open(self.logFileDir, "r+", encoding="utf-8") as logFile:
             lines: list = logFile.readlines()
 
@@ -40,7 +42,8 @@ class LogFileParser:
             for line in lines:
                 if line.startswith(self.selectedPrefixes):
                     logFile.write(line)
+        print("[ Logfile cleaned ]")
     
     def emptyLogFile(self) -> None:
-        print("[ Emptying logfile ]")
         with open(self.logFileDir, 'w'): pass
+        print("[ Logfile emptied ]")

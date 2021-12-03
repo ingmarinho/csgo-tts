@@ -1,5 +1,6 @@
-import keyboard
+from threading import Thread
 import threading
+import keyboard
 import time
 from queue import Queue
 
@@ -24,6 +25,19 @@ def CommandHandler(logFileParser: LogFileParser, tts: TTS, queue: Queue) -> None
             continue
         
         queue.put(line)
+
+
+def pause(commandHandlerThread: Thread) -> None:
+    if commandHandlerThread.paused:
+        commandHandlerThread.paused = False
+        print("[ CommandHandler has been unpaused ]")
+    else:
+        commandHandlerThread.paused = True
+        print("[ CommandHandler has been paused ]")
+
+
+def addCustomToQueue(commandHandlerThread: Thread, queue: Queue, text: str) -> None:
+    if not commandHandlerThread.paused: queue.put(text)
 
 
 def speakText(tts: TTS, text: str) -> None:

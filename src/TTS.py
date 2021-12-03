@@ -8,7 +8,11 @@ class TTS:
     def __init__(self) -> None:
         mixer.init()
         mixer.quit()
-        mixer.init(devicename="CABLE Input (VB-Audio Virtual Cable)")
+        try:
+            mixer.init(devicename="CABLE Input (VB-Audio Virtual Cable)")
+        except:
+            raise Exception("Please make sure VB-CABLE is installed, you can download it at: https://vb-audio.com/Cable/")
+        
     
     def speak(self, text: str) -> None:
         gTTS(text=text, lang='en-uk').save("text.mp3")
